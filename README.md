@@ -1,6 +1,6 @@
 # Matrix (C++ implementation)
 
-##Matrix Functions:
+## Matrix Functions:
 
 - Addition, subtraction of matrices
 - Matrix multiplication
