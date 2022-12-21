@@ -16,6 +16,7 @@ class S21Matrix {
         void Create();
         void Copy(const S21Matrix& o);
         void Clean(S21Matrix& o) noexcept;
+        void Rebuild(int counter, const int type);
 
     public:
         /* Constructors */
@@ -34,13 +35,10 @@ class S21Matrix {
 
         S21Matrix InverseMatrix();
         S21Matrix Transpose();
-        S21Matrix CalcComplements();
-        double Determinant();
-        S21Matrix Minor(int r, int c);
+        S21Matrix CalcComplements() const;
+        double Determinant() const;
+        S21Matrix Minor(int r, int c) const;
 
-        int countRowsAndCols(const S21Matrix& o) const;
-        bool checkRowsAndCols();
-    
         /* operators */
         S21Matrix operator+(const S21Matrix& x) const;
         S21Matrix operator-(const S21Matrix& x) const;
@@ -51,14 +49,20 @@ class S21Matrix {
         S21Matrix& operator*=(const S21Matrix& x) const;
         S21Matrix& operator*=(double x);
         S21Matrix operator*(double x);
-        double& operator()(const int i, const int j);
+        double& operator()(const int i, const int j); // if change by index
+        const double& operator()(const int i, const int j) const; // if const, readable only
         S21Matrix& operator=(S21Matrix&& x);
 
-        /* get-set - mutators, incapsulation example */
+        /* get-set - mutator and assessor */
         int getRows() noexcept;
         int getCols() noexcept;
         void setRows(int rows_count);
         void setCols(int cols_count);
+
+        /* mine */
+        int countRowsAndCols(const S21Matrix& o) const;
+        bool checkRowsAndCols();
+        void printer() const;
 };
 
 #endif

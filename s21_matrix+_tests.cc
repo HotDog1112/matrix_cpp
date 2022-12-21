@@ -256,6 +256,69 @@ TEST(test, determinant_4_throw) {
 }
 
 
+TEST(test, calc_comp_1) {
+    S21Matrix a(3,3), res(3,3), b(3,3);
+    // res(0бщ) {0, 90, -76, -222, -9, 137, 111, -18, 89};
+    res(0,0) = 0, res(0,1) = 90, res(0,2) = -75, \
+        res(1,0) = -222, res(1,1) = -9, res(1,2) = 137, \
+        res(2,0) = 111, res(2,1) = -18, res(2,2) = 89;
+    a(0,0) = 1;
+    a(0,1) = 21;
+    a(0,2) = 3;
+    a(1,0) = -4;
+    a(1,1) = 5;
+    a(1,2) = 6;
+    a(2,0) = 7;
+    a(2,1) = 10;
+    a(2,2) = 12;
+    b = a.CalcComplements();
+    ASSERT_EQ(res, b);
+}
+
+TEST(test, calc_comp_2) {
+    S21Matrix a(4,4), res(4,4), b(4,4);
+    res(0,0) = 1426, res(0,1) = -238, res(0,2) = -116, res(0,3) = -690, \
+        res(1,0) = -1301, res(1,1) = -217, res(1,2) = 111, res(1,3) = 1105, \
+        res(2,0) = -2000, res(2,1) = -90, res(2,2) = 80; res(2,3) = 730,\
+        res(3,0) = -3441, res(3,1) = -387, res(3,2) = 1081; res(3,3) = 1665;
+    a(0,0) = 1;
+    a(0,1) = 21;
+    a(0,2) = 3;
+    a(0,3) = 5;
+    a(1,0) = -4;
+    a(1,1) = 5;
+    a(1,2) = 6;
+    a(1,3) = -11;
+    a(2,0) = 7;
+    a(2,1) = 10;
+    a(2,2) = 12;
+    a(2,3) = 9;
+    a(3,0) = 0;
+    a(3,1) = 1;
+    a(3,2) = -8;
+    a(3,3) = 1;
+    b = a.CalcComplements();
+    ASSERT_EQ(res, b);
+}
+
+TEST(test, calc_comp_3) {
+    S21Matrix a(2,2), res(2,2), b(2,2);
+    res(0,0) = 2, res(0,1) = 3, res(1,0) = 5, res(1,1) = -1;
+    a(0,0) = -1;
+    a(0,1) = -5;
+    a(1,0) = -3;
+    a(1,1) = 2;
+    b = a.CalcComplements();
+    ASSERT_EQ(res, b);
+}
+
+TEST(test, calc_comp_4) {
+    S21Matrix a(2,5);
+    EXPECT_THROW(a.CalcComplements(), std::logic_error);
+
+}
+
+
 /*=========== OPERATOR TESTS ===========*/
 
 TEST(test, op_sum_Matrix_1_true) {

@@ -17,7 +17,7 @@ S21Matrix::S21Matrix(S21Matrix&& other) : rows_(other.rows_), cols_(other.cols_)
     Clean(other);
     other.cols_ = 0;
     other.rows_ = 0;
-    // other.matrix_ = nullptr;
+    other.matrix_ = nullptr;
 }
 
 S21Matrix::S21Matrix(const S21Matrix& other) : rows_(other.rows_), cols_(other.cols_) {
@@ -37,7 +37,7 @@ void S21Matrix::Create() {
     for (int i = 0; i < rows_; i++) {
         try {
             matrix_[i] = new double[cols_]();
-        } catch (...) {     // при любом исключении чистим память, которая успела выделиться
+        } catch (...) {
             int j = 0;
             while (j < i) {
                 delete[] matrix_[j];
@@ -48,7 +48,6 @@ void S21Matrix::Create() {
         }
     }
 }
-
 
 void S21Matrix::Copy(const S21Matrix& o) {
     if (o.cols_ > 0 && o.rows_ > 0) {
@@ -68,14 +67,6 @@ void S21Matrix::Clean(S21Matrix& o) noexcept {
         delete[] o.matrix_[i];
     }
     delete[] o.matrix_;
-}
-
-int S21Matrix::countRowsAndCols(const S21Matrix& o) const {
-    return (o.rows_ == rows_ && o.cols_ == cols_) ? 0 : 1;
-}
-
-bool S21Matrix::checkRowsAndCols() {
-    return (rows_ > 0 && cols_ > 0) ? true : false;
 }
 
 /*=========== public functions ===========*/
@@ -157,7 +148,7 @@ S21Matrix S21Matrix::Transpose() {
     return res;
 }
 
-double S21Matrix::Determinant() {       // для 4*4 неправильно считает
+double S21Matrix::Determinant() const {       // для 4*4 неправильно считает
     double res = 0, flag = 0, res_tmp = 0;
     if (this->cols_ != this->rows_) {
         throw std::out_of_range("Size error. Rows and cols aren\'t equal");
@@ -181,7 +172,7 @@ double S21Matrix::Determinant() {       // для 4*4 неправильно с�
     return res;
 }
 
-S21Matrix S21Matrix::Minor(int r, int c) {
+S21Matrix S21Matrix::Minor(int r, int c) const {
     int minor_col = 0, minor_row = 0, flag = 0;
     S21Matrix minor(rows_ - 1, cols_ - 1);
     for (int i = 0; i < rows_; i++) {
@@ -201,6 +192,27 @@ S21Matrix S21Matrix::Minor(int r, int c) {
     return minor;
 }
 
+S21Matrix S21Matrix::CalcComplements() const {
+    S21Matrix res(rows_, cols_);
+    double res_minor = 0;
+    if (this->cols_ != this->rows_) {
+        throw std::out_of_range("Size error. Rows and cols aren\'t equal");
+    } else {
+        if (this->rows_ == 1) {
+            res.matrix_[0][0] == this->matrix_[0][0];
+        } else {
+            for (int i = 0; i < rows_; i++) {
+                for (int j = 0; j < cols_; j++) {
+                    S21Matrix minor = Minor(i, j);
+                    res_minor = minor.Determinant();
+                    int sign = pow((-1), j + i);
+                    res.matrix_[i][j] = sign * res_minor;
+                }
+            }
+        }
+    }
+    return res;
+}
 
 /*=========== operators ===========*/
 
@@ -221,6 +233,13 @@ double& S21Matrix::operator()(const int i, const int j) {
         throw std::out_of_range("Error. Index out of range");
     }
     return matrix_[i][j];   // index matrix(i,j)
+}
+
+const double& S21Matrix::operator()(const int i, const int j) const {
+    if ((i < 0 || j < 0) || (rows_ <= i || cols_ <= j)) {
+        throw std::out_of_range("Error. Index out of range");
+    }
+    return matrix_[i][j];
 }
 
 S21Matrix S21Matrix::operator*(double x) {
@@ -278,9 +297,11 @@ int S21Matrix::getCols() noexcept {
     return this->cols_;
 }
 
-void S21Matrix::setCols(int cols_count) {   // if another value - ???
+void S21Matrix::setCols(int cols_count) {
     if (cols_count <= 0) {
         throw std::out_of_range("Error. Column\'s number can\'t be negative or zero value");
+    } else if (cols_count != this->cols_) {
+        Rebuild(cols_count, 0);
     }
     this->cols_ = cols_count;
 }
@@ -288,41 +309,96 @@ void S21Matrix::setCols(int cols_count) {   // if another value - ???
 void S21Matrix::setRows(int rows_count) {
     if (rows_count <= 0) {
         throw std::out_of_range("Error. Column\'s number can\'t be negative or zero value");
+    } else if (rows_count != this->cols_) {
+        Rebuild(rows_count, 1);    // new should be zeros
     }
     this->rows_ = rows_count;
 }
 
+void S21Matrix::Rebuild(int counter, const int type) {
+    int j_counter = 0, i_counter = 0;
+    int flag = 0;
+    if (type == 1) {
+        i_counter = counter;
+        j_counter = this->cols_;
+    } else {
+        i_counter = this->rows_;
+        j_counter = counter;
+        flag = 1;
+    }
+    double **tmp = new double*[counter];
+    for (int i = 0; i < i_counter; i++) {
+        tmp[i] = new double[j_counter];
+        for (int j = 0; j < j_counter; j++) {
+            if (flag == 1) { 
+                if (j < cols_) {
+                    tmp[i][j] = this->matrix_[i][j];
+                } else {
+                    tmp[i][j] = 0;
+                }
+            } else {
+                if (i < rows_) {
+                    tmp[i][j] = this->matrix_[i][j];
+                } else {
+                    tmp[i][j] = 0;
+                }
+            }
+        }
+    }
+    Clean(*this);
+    this->matrix_ = tmp;
+}
+
+/*=========== for me ===========*/
+
+int S21Matrix::countRowsAndCols(const S21Matrix& o) const {
+    return (o.rows_ == rows_ && o.cols_ == cols_) ? 0 : 1;
+}
+
+bool S21Matrix::checkRowsAndCols() {
+    return (rows_ > 0 && cols_ > 0) ? true : false;
+}
+
+void S21Matrix::printer() const{
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            printf("%.2lf ", matrix_[i][j]);
+        }
+        printf("\n");
+    }
+}
 
 
-// int main() {
-//     S21Matrix a(4,4), b(2,2);
-//     a(0,0) = 1;
-//     a(0,1) = 2;
-//     a(0,2) = -3;
-//     a(0,3) = 4;
-//     a(1,0) = 5;
-//     a(1,1) = 6;
-//     a(1,2) = 7;
-//     a(1,3) = 8;
-//     a(2,0) = 9;
-//     a(2,1) = -10;
-//     a(2,2) = 11;
-//     a(2,3) = 12;
-//     a(3,0) = 13;
-//     a(3,1) = 14;
-//     a(3,2) = 15;
-//     a(3,3) = 16;
-//     // b(0,0) = 2;
-//     // b(0,1) = 2;
-//     // b(1,0) = 2;
-//     // b(1,1) = 2;
-//     // b(2,0) = 2;
-//     // b(2,1) = 2;
-//     // a.MulMatrix(b);
-//     // printf("%lf %lf %lf\n%lf %lf %lf\n%lf %lf %lf", a(0,0), a(0,1), a(0,2),a(1,0), a(1,1), a(1,2), a(2,0), a(2,1), a(2,2));
-//     // a.setCols(5);
-//     // printf("%d, %d, %lf", a.getRows(), a.getCols(), a(1, 1));
-//     printf("%lf", a.Determinant());
-//     return 0;
-// }
+int main() {
+    S21Matrix a(4,4), b(4,4);
+    a(0,0) = 1;
+    a(0,1) = 21;
+    a(0,2) = 3;
+    a(0,3) = 4;
+    a(1,0) = -4;
+    a(1,1) = 5;
+    a(1,2) = 6;
+    a(1,3) = 8;
+    a(2,0) = 7;
+    a(2,1) = 10;
+    a(2,2) = 12;
+    a(2,3) = 12;
+    a(3,0) = 13;
+    a(3,1) = 14;
+    a(3,2) = 15;
+    a(3,3) = 16;
+    // b(0,0) = 2;
+    // b(0,1) = 2;
+    // b(1,0) = 2;
+    // b(1,1) = 2;
+    // b(2,0) = 2;
+    // b(2,1) = 2;
+    // a.MulMatrix(b);
+    // printf("%lf %lf %lf\n%lf %lf %lf\n%lf %lf %lf", a(0,0), a(0,1), a(0,2),a(1,0), a(1,1), a(1,2), a(2,0), a(2,1), a(2,2));
+    a.setRows(9);
+    // printf("%d, %d, %lf", a.getRows(), a.getCols(), a(1, 1));
+    a.printer();
+    // b = a.CalcComplements();
+    return 0;
+}
 
