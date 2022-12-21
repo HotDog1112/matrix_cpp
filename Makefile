@@ -26,8 +26,7 @@ gcov_report: clean
 	open report.html
 
 clean:
-	$(DELETE) *.a *.o s21_matrix_oop.a *.gcno *.gcda *.info s21_m_oop *.css *.html
-	$(DELETE) report
+	$(DELETE) *.a *.o s21_matrix_oop.a *.gcno *.gcda *.info s21_m_oop *.css *.html report
 
 leaks:
 	leaks --atExit -- ./s21_m_oop
