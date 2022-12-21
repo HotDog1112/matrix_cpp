@@ -217,23 +217,23 @@ S21Matrix S21Matrix::CalcComplements() const {
 }
 
 S21Matrix S21Matrix::InverseMatrix() {
-	S21Matrix res(rows_, cols_);
-	double d = this->Determinant();
-	if (std::fabs(d) < this->edge_) {				//?
+  S21Matrix res(rows_, cols_);
+  double d = this->Determinant();
+  if (std::fabs(d) < this->edge_) {  //?
     throw std::out_of_range("Error. Determinant is 0.");
   }
-	if (cols_ == 1 && rows_ == 1) {
-		res.matrix_[0][0] = 1 / this->matrix_[0][0];
-	} else {
-		// if (cols_ == 1 || rows_ == 1) {
-		// 	res.Copy(*this);
-		// } else {
-			res = Transpose();
-			res = res.CalcComplements();
-		// }
-		res.MulNumber(1.0 / d);
-	}
-	return res;
+  if (cols_ == 1 && rows_ == 1) {
+    res.matrix_[0][0] = 1 / this->matrix_[0][0];
+  } else {
+    // if (cols_ == 1 || rows_ == 1) {
+    // 	res.Copy(*this);
+    // } else {
+    res = Transpose();
+    res = res.CalcComplements();
+    // }
+    res.MulNumber(1.0 / d);
+  }
+  return res;
 }
 
 /*=========== operators ===========*/
@@ -391,16 +391,3 @@ void S21Matrix::printer() const {
     printf("\n");
   }
 }
-
-// int main() {
-//   S21Matrix a(1,1), res(1,1), b(1,1);
-//   res(0,0) = 0.5;
-//   a(0,0) = 2;
-// 	double t = 0;
-// 	t = a.Determinant();
-//   b = a.InverseMatrix();
-// 	a.printer();
-// 	printf("(%lf)", t);
-// 	b.printer();
-// 	return 0;
-// }

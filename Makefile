@@ -1,45 +1,39 @@
-CC=gcc -lstdc++
-CFLAGS=-c -Wall -Wextra -std=c++17
-# LINUXCFLAGS=-lcheck -lm -lsubunit -lrt -lpthread
+CC = gcc -lstdc++
+FLAGS= -Wall -Werror -Wextra -std=c++17 -pedantic
+SOURCES = s21_matrix_oop.cc
+OBJECTS = *.o
 TESTFLAGS=-lgtest
-SOURCES=s21_matrix_oop.cc
-OBJECTS=*.o
 DELETE=rm -rf
 
-all: s21_matrix_oop.a test gcov_report
-
+all: gcov_report
 
 s21_matrix_oop.a:
-	$(CC) $(CFLAGS) $(SOURCES)
-	ar rcs s21_matrix_oop.a s21_matrix_oop.o
-	$(DELETE) $(OBJECTS)
+	$(CC) -c $(FLAGS) $(SOURCES) -o $(OBJ_OOP_O)
+	ar -rc s21_matrix_oop.a $(OBJ_OOP_O)
+	ranlib s21_matrix_oop.a
 
 test: s21_matrix_oop.a
-	$(CC) s21_matrix+_tests.cc s21_matrix_oop.a  -o tests.out $(TESTFLAGS)
-	# $(CC) --coverage $(CFLAGS) -o test_cases s21_matrix_oop.a s21_matrix+_tests.a $(SOURCES) $(TESTFLAGS) 
-	./tests.out
+	$(CC) $(FLAGS) s21_matrix+_tests.cc s21_matrix_oop.a -o s21_m_oop $(TESTFLAGS)
+	./s21_m_oop
 
-# test: s21_matrix_oop.a
-# 	$(CC) -g -c s21_matrix+_tests.cc
-# 	ar rc s21_matrix+_tests.a s21_matrix+_tests.o
-# 	ranlib s21_matrix+_tests.a
-# 	$(CC) --coverage $(CFLAGS)  -o test_cases s21_matrix_oop.a s21_matrix+_tests.a $(SOURCES) $(TESTFLAGS) 
-# 	./test_cases
-
-clean:
-	$(DELETE) *.a *.html *.o *.gcda *.gcno *.css *.out
-
-gcov_report: test
+gcov_report: clean
+	$(CC) -c $(FLAGS) s21_matrix+_tests.cc -o s21_matrix+_tests.o
+	ar -rcs s21_matrix+_tests.a s21_matrix+_tests.o
+	$(CC) -coverage $(SOURCES) s21_matrix+_tests.a -o s21_m_oop $(TESTFLAGS)
+	./s21_m_oop
 	gcovr -r . --html --html-details -o report.html
 	rm *.gcda *.gcno
 	open report.html
 
-linter:
-	clang-format -i *.cc
-	clang-format -i *.h
-	clang-format -n *.cc *.h
+clean:
+	$(DELETE) *.a *.o s21_matrix_oop.a *.gcno *.gcda *.info s21_m_oop *.css *.html
+	$(DELETE) report
 
 leaks:
-	leaks --atExit -- ./s21_matrix_oop
+	leaks --atExit -- ./s21_m_oop
 
-.PHONY: all clean
+linter:
+	clang-format -i *.cc *.h
+	clang-format -n *.cc *.h
+
+.PHONY: leaks linter clean all

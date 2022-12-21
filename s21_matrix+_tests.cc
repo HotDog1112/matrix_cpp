@@ -300,7 +300,6 @@ TEST(test, calc_comp_2) {
   ASSERT_EQ(res, b);
 }
 
-
 TEST(test, calc_comp_3) {
   S21Matrix a(2, 2), res(2, 2), b(2, 2);
   res(0, 0) = 2, res(0, 1) = 3, res(1, 0) = 5, res(1, 1) = -1;
@@ -319,18 +318,18 @@ TEST(test, calc_comp_4) {
 
 TEST(test, inverse_1) {
   S21Matrix a(3, 3), res(3, 3), b(3, 3);
-  res(0, 0) = -0.4, res(0, 1) = 0.2, res(0, 2) = 0.6,
-  res(1, 0) = -0.2, res(1, 1) = 0.6, res(1, 2) = -0.2,
-  res(2, 0) = 0.5, res(2, 1) =  -0.5, res(2, 2) = 0;
-  a(0,0) = 1;
-  a(0,1) = 3;
-  a(0,2) = 4;
-  a(1,0) = 1;
-  a(1,1) = 3;
-  a(1,2) = 2;
-  a(2,0) = 2;
-  a(2,1) = 1;
-  a(2,2) = 2;
+  res(0, 0) = -0.4, res(0, 1) = 0.2, res(0, 2) = 0.6, res(1, 0) = -0.2,
+         res(1, 1) = 0.6, res(1, 2) = -0.2, res(2, 0) = 0.5, res(2, 1) = -0.5,
+         res(2, 2) = 0;
+  a(0, 0) = 1;
+  a(0, 1) = 3;
+  a(0, 2) = 4;
+  a(1, 0) = 1;
+  a(1, 1) = 3;
+  a(1, 2) = 2;
+  a(2, 0) = 2;
+  a(2, 1) = 1;
+  a(2, 2) = 2;
 
   b = a.InverseMatrix();
   ASSERT_EQ(res, b);
@@ -338,21 +337,20 @@ TEST(test, inverse_1) {
 
 TEST(test, inverse_2) {
   S21Matrix a(2, 2), res(2, 2), b(2, 2);
-  res(0, 0) = 0.5, res(0, 1) = -1,
-  res(1, 0) = -0.5, res(1, 1) = 1.5;
-  a(0,0) = 6;
-  a(0,1) = 4;
-  a(1,0) = 2;
-  a(1,1) = 2;
+  res(0, 0) = 0.5, res(0, 1) = -1, res(1, 0) = -0.5, res(1, 1) = 1.5;
+  a(0, 0) = 6;
+  a(0, 1) = 4;
+  a(1, 0) = 2;
+  a(1, 1) = 2;
 
   b = a.InverseMatrix();
   ASSERT_EQ(res, b);
 }
 
 TEST(test, inverse_3) {
-  S21Matrix a(1,1), res(1,1), b(1,1);
-  res(0,0) = 0.5;
-  a(0,0) = 2;
+  S21Matrix a(1, 1), res(1, 1), b(1, 1);
+  res(0, 0) = 0.5;
+  a(0, 0) = 2;
   b = a.InverseMatrix();
   ASSERT_EQ(res, b);
 }
