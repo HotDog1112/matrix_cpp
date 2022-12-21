@@ -368,37 +368,3 @@ void S21Matrix::printer() const{
     }
 }
 
-
-int main() {
-    S21Matrix a(4,4), b(4,4);
-    a(0,0) = 1;
-    a(0,1) = 21;
-    a(0,2) = 3;
-    a(0,3) = 4;
-    a(1,0) = -4;
-    a(1,1) = 5;
-    a(1,2) = 6;
-    a(1,3) = 8;
-    a(2,0) = 7;
-    a(2,1) = 10;
-    a(2,2) = 12;
-    a(2,3) = 12;
-    a(3,0) = 13;
-    a(3,1) = 14;
-    a(3,2) = 15;
-    a(3,3) = 16;
-    // b(0,0) = 2;
-    // b(0,1) = 2;
-    // b(1,0) = 2;
-    // b(1,1) = 2;
-    // b(2,0) = 2;
-    // b(2,1) = 2;
-    // a.MulMatrix(b);
-    // printf("%lf %lf %lf\n%lf %lf %lf\n%lf %lf %lf", a(0,0), a(0,1), a(0,2),a(1,0), a(1,1), a(1,2), a(2,0), a(2,1), a(2,2));
-    a.setRows(9);
-    // printf("%d, %d, %lf", a.getRows(), a.getCols(), a(1, 1));
-    a.printer();
-    // b = a.CalcComplements();
-    return 0;
-}
-
