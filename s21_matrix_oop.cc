@@ -300,7 +300,7 @@ S21Matrix &S21Matrix::operator*=(double x) {
 
 S21Matrix &S21Matrix::operator*=(const S21Matrix &x) {
   this->MulMatrix(x);
-  return (*this);
+  return *this;
 }
 
 S21Matrix &S21Matrix::operator-=(const S21Matrix &x) {

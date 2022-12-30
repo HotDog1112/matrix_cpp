@@ -20,10 +20,10 @@ class S21Matrix {
 
  public:
   /* Constructors */
-  S21Matrix() noexcept;
+  S21Matrix() noexcept; //
   S21Matrix(int rows, int cols);
   S21Matrix(const S21Matrix &other);
-  S21Matrix(S21Matrix &&other);
+  S21Matrix(S21Matrix &&other); //
   ~S21Matrix();
 
   /* Methods */
@@ -49,7 +49,7 @@ class S21Matrix {
   S21Matrix &operator*=(const S21Matrix &x);
   S21Matrix &operator*=(double x);
   S21Matrix operator*(double x);
-  double &operator()(const int i, const int j);  // if change by index
+  double &operator()(const int i, const int j);  // if change by index //
   const double &operator()(const int i,
                            const int j) const;  // if const, readable only
   S21Matrix &operator=(S21Matrix &&x);
@@ -63,7 +63,7 @@ class S21Matrix {
   /* mine */
   int countRowsAndCols(const S21Matrix &o) const;
   bool checkRowsAndCols();
-  void printer() const;
+  void printer() const; //
 };
 
 #endif

@@ -146,6 +146,11 @@ TEST(test, mul_Matrix_1_true) {
   EXPECT_TRUE(res.EqMatrix(a));
 }
 
+TEST(test, mul_Matrix_2_throw) {
+  S21Matrix a(2, 4), b(7, 2);
+  EXPECT_THROW(a.MulMatrix(b), std::logic_error);
+}
+
 // TEST(test, mul_Matrix_2_true) {
 //     S21Matrix a(2,3), b(3,2), res(2,2);
 //     for (int i = 0; i < a.getRows(); i++) {
@@ -435,6 +440,12 @@ TEST(test, op_brackets_Matrix_3_throw) {
   EXPECT_THROW(a(1, -1), std::logic_error);
 }
 
+TEST(test, op_brackets_const_Matrix_1_true) {
+  S21Matrix a(3, 3);
+  a(2,2) = 1;
+  ASSERT_EQ(1, a(2, 2));
+}
+
 TEST(test, op_mul_Number_1_true) {
   S21Matrix a(2, 2), res(2, 2);
   for (int i = 0; i < a.getRows(); i++) {
@@ -457,6 +468,42 @@ TEST(test, op_mul_Number_2_true) {
   }
   a = a * 0;
   EXPECT_TRUE(res.EqMatrix(a));
+}
+
+TEST(test, op_mul_Matrix_1_true) {
+  S21Matrix a(2, 2), b(2, 2), res(2, 2);
+  for (int i = 0; i < a.getRows(); i++) {
+    for (int j = 0; j < a.getCols(); j++) {
+      res(i, j) = 4;
+      a(i, j) = 1;
+      b(i, j) = 2;
+    }
+  }
+  a = a * b;
+  EXPECT_TRUE(res.EqMatrix(a));
+}
+
+TEST(test, op_mul_Matrix_2_throw) {
+  S21Matrix a(2, 4), b(7, 2);
+  EXPECT_THROW(a = a * b, std::logic_error);
+}
+
+TEST(test, op_mul_eq_Matrix_1_true) {
+  S21Matrix a(2, 2), b(2, 2), res(2, 2);
+  for (int i = 0; i < a.getRows(); i++) {
+    for (int j = 0; j < a.getCols(); j++) {
+      res(i, j) = 4;
+      a(i, j) = 1;
+      b(i, j) = 2;
+    }
+  }
+  a *= b;
+  EXPECT_TRUE(res.EqMatrix(a));
+}
+
+TEST(test, op_mul_eq_Matrix_2_throw) {
+  S21Matrix a(2, 4), b(7, 2);
+  EXPECT_THROW(a *= b, std::logic_error);
 }
 
 TEST(test, op_eq_Matrix_1) {
@@ -554,6 +601,68 @@ TEST(test, op_eqAndSub_Matrix_3_throw) {
   S21Matrix a(3, 1), b(2, 3);
   EXPECT_THROW(a -= b, std::logic_error);
 }
+
+
+
+/*=========== GET-SET TESTS ===========*/
+
+TEST(test, get_1) {
+  S21Matrix a(3, 2);
+  int res_1 = a.getCols();
+  ASSERT_EQ(2, res_1);
+}
+
+TEST(test, get_2) {
+  S21Matrix a(3, 2);
+  int res_1 = a.getRows();
+  ASSERT_EQ(3, res_1);
+}
+
+TEST(test, set_1_rows) {
+  S21Matrix a(3, 2);
+  a.setRows(4);
+  int res_1 = a.getRows();
+  ASSERT_EQ(4, res_1);
+}
+
+TEST(test, set_2_rows) {
+  S21Matrix a(3, 2);
+  a.setRows(3);
+  int res_1 = a.getRows();
+  ASSERT_EQ(3, res_1);
+}
+
+TEST(test, set_3_rows) {
+  S21Matrix a(3, 2);
+  EXPECT_THROW(a.setRows(-1), std::logic_error);
+
+}
+
+TEST(test, set_1_cols) {
+  S21Matrix a(3, 2);
+  a.setCols(2);
+  int res_1 = a.getCols();
+  ASSERT_EQ(2, res_1);
+}
+
+TEST(test, set_2_cols) {
+  S21Matrix a(3, 2);
+  a.setCols(5);
+  int res_1 = a.getCols();
+  ASSERT_EQ(5, res_1);
+}
+
+TEST(test, set_3_cols) {
+  S21Matrix a(3, 3);
+  EXPECT_THROW(a.setCols(-1), std::logic_error);
+
+}
+
+// TEST(test, constructor) {
+//   S21Matrix a(2, 2), b;
+//   b 
+//   ASSERT_EQ(5, res_1);
+// }
 
 int main() {
   testing::InitGoogleTest();
