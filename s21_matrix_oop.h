@@ -20,10 +20,10 @@ class S21Matrix {
 
  public:
   /* Constructors */
-  S21Matrix() noexcept; //
+  S21Matrix() noexcept;  //
   S21Matrix(int rows, int cols);
   S21Matrix(const S21Matrix &other);
-  S21Matrix(S21Matrix &&other); //
+  S21Matrix(S21Matrix &&other);  //
   ~S21Matrix();
 
   /* Methods */
@@ -63,7 +63,7 @@ class S21Matrix {
   /* mine */
   int countRowsAndCols(const S21Matrix &o) const;
   bool checkRowsAndCols();
-  void printer() const; //
+  void printer() const;  //
 };
 
 #endif

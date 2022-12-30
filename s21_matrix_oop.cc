@@ -36,11 +36,11 @@ S21Matrix::~S21Matrix() {
 
 void S21Matrix::Create() {
   matrix_ = new double *[rows_]();
-  for (int i = 0; i < rows_; i++) {
+  for (int i(0); i < rows_; i++) {
     try {
       matrix_[i] = new double[cols_]();
     } catch (...) {
-      int j = 0;
+      int j(0);
       while (j < i) {
         delete[] matrix_[j];
         j++;
@@ -56,8 +56,8 @@ void S21Matrix::Copy(const S21Matrix &o) {
     cols_ = o.cols_;
     rows_ = o.rows_;
     Create();
-    for (int i = 0; i < rows_; i++) {
-      for (int j = 0; j < cols_; j++) {
+    for (int i(0); i < rows_; i++) {
+      for (int j(0); j < cols_; j++) {
         matrix_[i][j] = o.matrix_[i][j];
       }
     }
@@ -65,7 +65,7 @@ void S21Matrix::Copy(const S21Matrix &o) {
 }
 
 void S21Matrix::Clean(S21Matrix &o) noexcept {
-  for (int i = 0; i < o.rows_; i++) {
+  for (int i(0); i < o.rows_; i++) {
     delete[] o.matrix_[i];
   }
   delete[] o.matrix_;
@@ -77,8 +77,8 @@ void S21Matrix::SumMatrix(const S21Matrix &other) {
   if (this->countRowsAndCols(other) == 1) {
     throw std::out_of_range("Size error: sizes are not equal.");
   } else {
-    for (int i = 0; i < rows_; i++) {
-      for (int j = 0; j < cols_; j++) {
+    for (int i(0); i < rows_; i++) {
+      for (int j(0); j < cols_; j++) {
         matrix_[i][j] += other.matrix_[i][j];
       }
     }
@@ -89,8 +89,8 @@ void S21Matrix::SubMatrix(const S21Matrix &other) {
   if (this->countRowsAndCols(other) == 1) {
     throw std::out_of_range("Size error: sizes are not equal.");
   } else {
-    for (int i = 0; i < rows_; i++) {
-      for (int j = 0; j < cols_; j++) {
+    for (int i(0); i < rows_; i++) {
+      for (int j(0); j < cols_; j++) {
         matrix_[i][j] -= other.matrix_[i][j];
       }
     }
@@ -98,8 +98,8 @@ void S21Matrix::SubMatrix(const S21Matrix &other) {
 }
 
 void S21Matrix::MulNumber(const double num) {
-  for (int i = 0; i < rows_; i++) {
-    for (int j = 0; j < cols_; j++) {
+  for (int i(0); i < rows_; i++) {
+    for (int j(0); j < cols_; j++) {
       matrix_[i][j] *= num;
     }
   }
@@ -111,8 +111,8 @@ void S21Matrix::MulMatrix(const S21Matrix &other) {
     throw std::out_of_range(
         "Size error: different sizes of a.column and b.rows");
   } else {
-    for (int i = 0; i < rows_; i++) {
-      for (int j = 0; j < other.cols_; j++) {
+    for (int i(0); i < rows_; i++) {
+      for (int j(0); j < other.cols_; j++) {
         res(i, j) = 0;
         for (int k = 0; k < cols_; k++) {
           res.matrix_[i][j] += matrix_[i][k] * other.matrix_[k][j];
@@ -129,8 +129,8 @@ bool S21Matrix::EqMatrix(const S21Matrix &other) const {
   if (this->countRowsAndCols(other) == 1) {
     throw std::out_of_range("Matrices are not equal: different size");
   } else {
-    for (int i = 0; i < rows_; i++) {
-      for (int j = 0; j < cols_; j++) {
+    for (int i(0); i < rows_; i++) {
+      for (int j(0); j < cols_; j++) {
         if (fabs(matrix_[i][j] - other.matrix_[i][j]) >= edge_) {
           res = false;
           break;
@@ -143,8 +143,8 @@ bool S21Matrix::EqMatrix(const S21Matrix &other) const {
 
 S21Matrix S21Matrix::Transpose() {
   S21Matrix res(cols_, rows_);
-  for (int i = 0; i < rows_; i++) {
-    for (int j = 0; j < cols_; j++) {
+  for (int i(0); i < rows_; i++) {
+    for (int j(0); j < cols_; j++) {
       res.matrix_[j][i] = matrix_[i][j];
     }
   }
@@ -162,7 +162,7 @@ double S21Matrix::Determinant() const {  // для 4*4 неправильно с
       res = matrix_[0][0] * matrix_[1][1] - matrix_[1][0] * matrix_[0][1];
     } else {
       double sign = 1;
-      for (int j = 0; j < cols_; j++) {
+      for (int j(0); j < cols_; j++) {
         S21Matrix tmp = Minor(0, j);
         flag = tmp.Determinant();
         sign = pow((-1), j + 2);
@@ -177,8 +177,8 @@ double S21Matrix::Determinant() const {  // для 4*4 неправильно с
 S21Matrix S21Matrix::Minor(int r, int c) const {
   int minor_col = 0, minor_row = 0, flag = 0;
   S21Matrix minor(rows_ - 1, cols_ - 1);
-  for (int i = 0; i < rows_; i++) {
-    for (int j = 0; j < cols_; j++) {
+  for (int i(0); i < rows_; i++) {
+    for (int j(0); j < cols_; j++) {
       if (i != r && j != c) {
         minor.matrix_[minor_row][minor_col] = matrix_[i][j];
         minor_col++;
@@ -203,8 +203,8 @@ S21Matrix S21Matrix::CalcComplements() const {
     if (this->rows_ == 1) {
       res.matrix_[0][0] == this->matrix_[0][0];
     } else {
-      for (int i = 0; i < rows_; i++) {
-        for (int j = 0; j < cols_; j++) {
+      for (int i(0); i < rows_; i++) {
+        for (int j(0); j < cols_; j++) {
           S21Matrix minor = Minor(i, j);
           res_minor = minor.Determinant();
           int sign = pow((-1), j + i);
@@ -351,9 +351,9 @@ void S21Matrix::Rebuild(int counter, const int type) {
     flag = 1;
   }
   double **tmp = new double *[counter];
-  for (int i = 0; i < i_counter; i++) {
+  for (int i(0); i < i_counter; i++) {
     tmp[i] = new double[j_counter];
-    for (int j = 0; j < j_counter; j++) {
+    for (int j(0); j < j_counter; j++) {
       if (flag == 1) {
         if (j < cols_) {
           tmp[i][j] = this->matrix_[i][j];
@@ -384,8 +384,8 @@ bool S21Matrix::checkRowsAndCols() {
 }
 
 void S21Matrix::printer() const {
-  for (int i = 0; i < rows_; i++) {
-    for (int j = 0; j < cols_; j++) {
+  for (int i(0); i < rows_; i++) {
+    for (int j(0); j < cols_; j++) {
       printf("%lf ", matrix_[i][j]);
     }
     printf("\n");
