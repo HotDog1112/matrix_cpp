@@ -1,15 +1,16 @@
-CC = gcc -lstdc++
-FLAGS= -Wall -Werror -Wextra -std=c++17 -pedantic
-SOURCES = s21_matrix_oop.cc
-OBJECTS = *.o
+CC=gcc -lstdc++
+FLAGS=-Wall -Wextra -std=c++17 -pedantic
+SOURCES=s21_matrix_oop.cc
+OBJECTS=*.o
 TESTFLAGS=-lgtest
 DELETE=rm -rf
+OBJ= s21_matrix_oop.o
 
 all: gcov_report
 
 s21_matrix_oop.a:
-	$(CC) -c $(FLAGS) $(SOURCES) -o $(OBJ_OOP_O)
-	ar -rc s21_matrix_oop.a $(OBJ_OOP_O)
+	$(CC) -c $(FLAGS) $(SOURCES) -o $(OBJ)
+	ar -rc s21_matrix_oop.a $(OBJ)
 	ranlib s21_matrix_oop.a
 
 test: s21_matrix_oop.a
@@ -34,5 +35,11 @@ leaks:
 linter:
 	clang-format -i *.cc *.h
 	clang-format -n *.cc *.h
+
+# push:
+# 	git add .
+# 	`source ./commit.sh`
+# 	git commit -m "$(res)"
+# 	git push
 
 .PHONY: leaks linter clean all

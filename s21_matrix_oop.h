@@ -10,7 +10,7 @@ class S21Matrix {
   /* Attributes - свойства */
   int rows_, cols_;
   double **matrix_;
-  double edge_ = 0.0000001;
+  double edge_ = 0.0000001; // const
 
   /* private functions to create, copy and remove matrix */
   void Create();
@@ -20,12 +20,12 @@ class S21Matrix {
 
  public:
   /* Constructors */
-  S21Matrix() noexcept;  //
+  S21Matrix() noexcept;  // noexcept ? mistakes possible
   S21Matrix(int rows, int cols);
   S21Matrix(const S21Matrix &other);
   S21Matrix(S21Matrix &&other);  //
   ~S21Matrix();
-
+  //explicit - ?
   /* Methods */
   void SumMatrix(const S21Matrix &other);
   bool EqMatrix(const S21Matrix &other) const;

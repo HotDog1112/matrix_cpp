@@ -22,7 +22,7 @@ S21Matrix::S21Matrix(S21Matrix &&other)
 }
 
 S21Matrix::S21Matrix(const S21Matrix &other)
-    : rows_(other.rows_), cols_(other.cols_) {
+    : rows_(other.rows_), cols_(other.cols_) {      //почиатть хабр move constructor
   Copy(other);
 }
 
@@ -257,12 +257,12 @@ double &S21Matrix::operator()(const int i, const int j) {
   return matrix_[i][j];  // index matrix(i,j)
 }
 
-const double &S21Matrix::operator()(const int i, const int j) const {
-  if ((i < 0 || j < 0) || (rows_ <= i || cols_ <= j)) {
-    throw std::out_of_range("Error. Index out of range");
-  }
-  return matrix_[i][j];
-}
+// const double &S21Matrix::operator()(const int i, const int j) const {
+//   if ((i < 0 || j < 0) || (rows_ <= i || cols_ <= j)) {
+//     throw std::out_of_range("Error. Index out of range");
+//   }
+//   return matrix_[i][j];
+// }
 
 S21Matrix S21Matrix::operator*(double x) {
   S21Matrix res(*this);
@@ -315,7 +315,7 @@ S21Matrix &S21Matrix::operator+=(const S21Matrix &x) {
 
 /*=========== get-set (accessor-mutator) ===========*/
 
-int S21Matrix::getRows() noexcept { return this->rows_; }
+int S21Matrix::getRows() noexcept { return this->rows_; } //const
 
 int S21Matrix::getCols() noexcept { return this->cols_; }
 

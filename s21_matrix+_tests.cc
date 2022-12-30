@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
+
 #include <iostream>
+
 #include "s21_matrix_oop.h"
 
 /*=========== FUNCTIONS TESTS ===========*/
@@ -622,21 +624,20 @@ TEST(test_getset, set_3_cols) {
   EXPECT_THROW(a.setCols(-1), std::logic_error);
 }
 
-
 TEST(test, constructor) {
-S21Matrix a;
-EXPECT_EQ(a.getCols(), 0);
-EXPECT_EQ(a.getRows(), 0);
-a.setCols(2);
-a.setCols(2);
-S21Matrix b(3,3), c(b);
-EXPECT_EQ(c.getRows(), 3);
-S21Matrix d(std::move(b));
-EXPECT_EQ(b.getCols(), 0);
-EXPECT_EQ(b.getRows(), 0);
-EXPECT_EQ(d.getRows(), 3);
-EXPECT_EQ(d.getCols(), 3);
-EXPECT_THROW(S21Matrix g(3,-2), std::logic_error);
+  S21Matrix a;
+  EXPECT_EQ(a.getCols(), 0);
+  EXPECT_EQ(a.getRows(), 0);
+  a.setCols(2);
+  a.setCols(2);
+  S21Matrix b(3, 3), c(b);
+  EXPECT_EQ(c.getRows(), 3);
+  S21Matrix d(std::move(b));
+  EXPECT_EQ(b.getCols(), 0);
+  EXPECT_EQ(b.getRows(), 0);
+  EXPECT_EQ(d.getRows(), 3);
+  EXPECT_EQ(d.getCols(), 3);
+  EXPECT_THROW(S21Matrix g(3, -2), std::logic_error);
 }
 
 TEST(test, printer) {
@@ -647,7 +648,7 @@ TEST(test, printer) {
     }
   }
   a.printer();
-  ASSERT_EQ(a(1,1), 0.87);
+  ASSERT_EQ(a(1, 1), 0.87);
 }
 
 int main() {
