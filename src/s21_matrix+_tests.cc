@@ -89,6 +89,15 @@ TEST(test, TEST_SEGA) {
   EXPECT_EQ(matrix_check.GetCols(), 0);
 
   S21Matrix matrix_test{matrix_check};
+  EXPECT_EQ(matrix_test.GetRows(), 0);
+  EXPECT_EQ(matrix_test.GetCols(), 0);
+
+    S21Matrix matrix_check1;
+  S21Matrix matrix_check2;
+
+  matrix_check1 * matrix_check2;
+
+
 
 }
 
@@ -153,6 +162,29 @@ TEST(test_function, mul_Matrix_1_true) {
   a.MulMatrix(b);
   EXPECT_TRUE(res.EqMatrix(a));
 }
+
+TEST(test_function, mul_Matrix_4_true) {
+  S21Matrix a(2, 3), b(3, 2), res(2, 2);
+  a(0,0) = 1;
+  a(0,1) = 2;
+  a(0,2) = 3;
+  a(1,0) = 1;
+  a(1,1) = 2;
+  a(1,2) = 3;
+  b(0,0) = 1;
+  b(0,1) = 2;
+  b(1,0) = 3;
+  b(1,1) = 4;
+  b(2,0) = 5;
+  b(2,1) = 6;
+  res(0,0) = 22;
+  res(0,1) = 28;
+  res(1,0) = 22;
+  res(1,1) = 28;
+  a.MulMatrix(b);
+  EXPECT_TRUE(res.EqMatrix(a));
+}
+
 
 TEST(test_function, mul_Matrix_2_throw) {
   S21Matrix a(2, 4), b(7, 2);

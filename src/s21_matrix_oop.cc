@@ -13,16 +13,12 @@ S21Matrix::S21Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
 
 S21Matrix::S21Matrix(S21Matrix &&other)
     : rows_(0), cols_(0), matrix_(nullptr) {
-  // std::swap(rows_, other.rows_);  
-  // std::swap(cols_, other.cols_);  
-  // std::swap(matrix_, other.matrix_);  
   rows_ = other.rows_;
   cols_ = other.cols_;
   matrix_ = other.matrix_;
   other.matrix_ = nullptr;
   other.rows_ = 0;
   other.cols_ = 0;
-
 }
 
 S21Matrix::S21Matrix(const S21Matrix &other)
@@ -31,7 +27,7 @@ S21Matrix::S21Matrix(const S21Matrix &other)
 }
 
 S21Matrix::~S21Matrix() {
-  Clean(*this);
+  Clean();
 }
 
 /*=========== private functions ===========*/
@@ -54,7 +50,7 @@ void S21Matrix::Create() {
 }
 
 void S21Matrix::Copy(const S21Matrix &o) {
-  if (o.cols_ > 0 && o.rows_ > 0) {
+  if (o.cols_ >= 0 && o.rows_ >= 0) {
     cols_ = o.cols_;
     rows_ = o.rows_;
     Create();
@@ -66,19 +62,20 @@ void S21Matrix::Copy(const S21Matrix &o) {
   }
 }
 
-void S21Matrix::Clean(S21Matrix &o) noexcept {
+S21Matrix& S21Matrix::Clean() noexcept {
   if (matrix_) {
-    for (int i(0); i < o.rows_; i++) {
-      delete[] o.matrix_[i];
+    for (int i(0); i < rows_; i++) {
+      delete[] matrix_[i];
     }
-    delete[] o.matrix_;
+    delete[] matrix_;
   }
+  return *this;
 }
 
 /*=========== public functions ===========*/
 
 void S21Matrix::SumMatrix(const S21Matrix &other) {
-  if (this->CountRowsAndCols(other) == 1) {
+  if (this->CountRowsAndCols(other) == false || !this->CheckRowsAndCols()) {
     throw std::out_of_range("Size error: sizes are not equal.");
   } else {
     for (int i(0); i < rows_; i++) {
@@ -90,7 +87,7 @@ void S21Matrix::SumMatrix(const S21Matrix &other) {
 }
 
 void S21Matrix::SubMatrix(const S21Matrix &other) {
-  if (this->CountRowsAndCols(other) == 1) {
+  if (this->CountRowsAndCols(other) == false || !this->CheckRowsAndCols()) {
     throw std::out_of_range("Size error: sizes are not equal.");
   } else {
     for (int i(0); i < rows_; i++) {
@@ -117,20 +114,34 @@ void S21Matrix::MulMatrix(const S21Matrix &other) {
   } else {
     for (int i(0); i < rows_; i++) {
       for (int j(0); j < other.cols_; j++) {
-        res(i, j) = 0;
-        for (int k = 0; k < cols_; k++) {
+        for (int k(0); k < cols_; k++) {
           res.matrix_[i][j] += matrix_[i][k] * other.matrix_[k][j];
         }
       }
     }
   }
-  Clean(*this);
+  Clean();
+  res.SetRows(rows_);
+  res.SetCols(other.cols_);
   this->Copy(res);
+
+
+  //row1 - кол-во строк в матрице a1, col1 - кол-во столбцов в 1 
+// матрице, col2 - кол-во столбвоц во 2 матрице
+// void multiplication(int(&a1)[4][4], int(&b)[4][4], int(&c)[4][4], int row1, int col1, int col2) {
+//     for (int i = 0; i < row1; i++) {
+//         for (int j = 0; j < col2; j++) {
+//             c[i][j] = 0;
+//             for (int k = 0; k < col1; k++)
+//                 c[i][j] += a1[i][k] * b[k][j];
+//         }
+//     }
+// }
 }
 
 bool S21Matrix::EqMatrix(const S21Matrix &other) const {
   bool res = true;
-  if (this->CountRowsAndCols(other) == 1) {
+  if (this->CountRowsAndCols(other) == false) {
     return false;
   } else {
     for (int i(0); i < rows_; i++) {
@@ -147,9 +158,11 @@ bool S21Matrix::EqMatrix(const S21Matrix &other) const {
 
 S21Matrix S21Matrix::Transpose() const {
   S21Matrix res(cols_, rows_);
+  double tmp = 0;
   for (int i(0); i < rows_; i++) {
     for (int j(0); j < cols_; j++) {
       res.matrix_[j][i] = matrix_[i][j];
+      tmp = res.matrix_[j][i];
     }
   }
   return res;
@@ -157,11 +170,11 @@ S21Matrix S21Matrix::Transpose() const {
 
 double S21Matrix::Determinant() const {
   double res = 0, flag = 0, res_tmp = 0;
-  if (this->cols_ != this->rows_) {
+  if (cols_ != rows_) {
     throw std::out_of_range("Size error. Rows and cols aren\'t equal");
   } else {
     if (rows_ == 1) {
-      res = this->matrix_[0][0];
+      res = matrix_[0][0];
     } else if (rows_ == 2) {
       res = matrix_[0][0] * matrix_[1][1] - matrix_[1][0] * matrix_[0][1];
     } else {
@@ -201,11 +214,11 @@ S21Matrix S21Matrix::Minor(int rows, int columns) const {
 S21Matrix S21Matrix::CalcComplements() const {
   S21Matrix res(rows_, cols_);
   double res_minor = 0;
-  if (this->cols_ != this->rows_) {
+  if (cols_ != rows_) {
     throw std::out_of_range("Size error. Rows and cols aren\'t equal");
   } else {
-    if (this->rows_ == 1) {
-      res.matrix_[0][0] = this->matrix_[0][0];
+    if (rows_ == 1) {
+      res.matrix_[0][0] = matrix_[0][0];
     } else {
       for (int i(0); i < rows_; i++) {
         for (int j(0); j < cols_; j++) {
@@ -222,20 +235,17 @@ S21Matrix S21Matrix::CalcComplements() const {
 
 S21Matrix S21Matrix::InverseMatrix() const {
   S21Matrix res(rows_, cols_);
-  double d = this->Determinant();
+  double d = Determinant();
   if (std::fabs(d) < EDGE) {
     throw std::out_of_range("Error. Determinant is 0.");
   }
   if (cols_ == 1 && rows_ == 1) {
-    res.matrix_[0][0] = 1 / this->matrix_[0][0];
+    res.matrix_[0][0] = 1 / matrix_[0][0];
   } else {
-    // if (cols_ == 1 || rows_ == 1) {
-    // 	res.Copy(*this);
-    // } else {
     res = Transpose();
     res = res.CalcComplements();
-    // }
     res.MulNumber(1.0 / d);
+
   }
   return res;
 }
@@ -282,21 +292,19 @@ S21Matrix S21Matrix::operator*(const S21Matrix &x) const {
 
 S21Matrix &S21Matrix::operator=(S21Matrix &&x) {
   if (this != &x) {
-    Clean(*this);
-    // rows_ = x.rows_;
-    // cols_ = x.cols_;
-    // matrix_ = x.matrix_;
-
-    // x.cols_ = 0;
-    // x.rows_ = 0;
-    // x.matrix_ = nullptr;
+  rows_ = x.rows_;
+  cols_ = x.cols_;
+  matrix_ = x.matrix_;
+  x.matrix_ = nullptr;
+  x.rows_ = 0;
+  x.cols_ = 0;
   }
   return *this;
 }
 
 S21Matrix &S21Matrix::operator=(S21Matrix &x) {
   if (this != &x) {
-    Clean(*this);
+    Clean();
     rows_ = x.rows_;
     cols_ = x.cols_;
     matrix_ = x.matrix_;
@@ -339,24 +347,24 @@ int S21Matrix::GetRows() const noexcept { return this->rows_; }
 int S21Matrix::GetCols() const noexcept { return this->cols_; }
 
 void S21Matrix::SetCols(int cols_count) {
-  if (cols_count <= 0) {
+  if (cols_count < 0) {
     throw std::out_of_range(
         "Error. Column\'s number can\'t be negative or zero value");
-  } else if (cols_count != this->cols_) {
+  } else if (cols_count != cols_) {
     Rebuild(cols_count, 0);
   }
-  this->cols_ = cols_count;
+  cols_ = cols_count;
 }
 
 void S21Matrix::SetRows(int rows_count) {
-  if (rows_count <= 0) {
+  if (rows_count < 0) {
     throw std::out_of_range(
         "Error. Column\'s number can\'t be negative or zero value");
   } 
-  if (rows_count != this->cols_) {
+  if (rows_count != cols_) {
     Rebuild(rows_count, 1);
   }
-  this->rows_ = rows_count;
+  rows_ = rows_count;
 }
 
 void S21Matrix::Rebuild(int counter, const int type) {
@@ -364,9 +372,9 @@ void S21Matrix::Rebuild(int counter, const int type) {
   int flag = 0;
   if (type == 1) {
     i_counter = counter;
-    j_counter = this->cols_;
+    j_counter = cols_;
   } else {
-    i_counter = this->rows_;
+    i_counter = rows_;
     j_counter = counter;
     flag = 1;
   }
@@ -376,31 +384,31 @@ void S21Matrix::Rebuild(int counter, const int type) {
     for (int j(0); j < j_counter; j++) {
       if (flag == 1) {
         if (j < cols_) {
-          tmp[i][j] = this->matrix_[i][j];
+          tmp[i][j] = matrix_[i][j];
         } else {
           tmp[i][j] = 0;
         }
       } else {
         if (i < rows_) {
-          tmp[i][j] = this->matrix_[i][j];
+          tmp[i][j] = matrix_[i][j];
         } else {
           tmp[i][j] = 0;
         }
       }
     }
   }
-  Clean(*this);
-  this->matrix_ = tmp;
+  Clean();
+  matrix_ = tmp;
 }
 
 /*=========== for me ===========*/
 
 bool S21Matrix::CountRowsAndCols(const S21Matrix &o) const {
-  return (o.rows_ == rows_ && o.cols_ == cols_) ? 0 : 1;
+  return (o.rows_ == rows_ && o.cols_ == cols_) ? true : false;
 }
 
 bool S21Matrix::CheckRowsAndCols() {
-  return (rows_ > 0 && cols_ > 0) ? true : false;
+  return (rows_ >= 0 && cols_ >= 0) ? true : false;
 }
 
 void S21Matrix::Printer() const {
@@ -411,3 +419,18 @@ void S21Matrix::Printer() const {
     printf("\n");
   }
 }
+
+// int main() {
+//       S21Matrix matrix_check;
+//   matrix_check.GetRows();
+//   matrix_check.GetCols();
+
+//   S21Matrix matrix_test{matrix_check};
+//   // matrix_test.GetRows();
+//   // matrix_test.GetCols();
+//   // return 0;
+//     S21Matrix matrix_check1(0,0);
+//   S21Matrix matrix_check2;
+
+//   matrix_check1 * matrix_check2;
+// }

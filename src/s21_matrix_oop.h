@@ -14,7 +14,7 @@ class S21Matrix {
 
   void Create();
   void Copy(const S21Matrix &o);
-  void Clean(S21Matrix &o) noexcept;
+  S21Matrix& Clean() noexcept;
   void Rebuild(int counter, const int type);
   bool CountRowsAndCols(const S21Matrix &o) const;
   bool CheckRowsAndCols();
