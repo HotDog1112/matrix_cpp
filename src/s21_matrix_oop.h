@@ -1,31 +1,32 @@
-#ifndef S21_MATRIX_OOP_H__
-#define S21_MATRIX_OOP_H__
+#ifndef SRC_S21_MATRIX_OOP_H_
+#define SRC_S21_MATRIX_OOP_H_
 
-#include <cmath>
-#include <cstring>
 #include <iostream>
+#include <cstring>
+#include <cmath>
+
+#define EDGE 0.0000001
 
 class S21Matrix {
  private:
-  /* Attributes - свойства */
   int rows_, cols_;
   double **matrix_;
-  double edge_ = 0.0000001; // const
 
-  /* private functions to create, copy and remove matrix */
   void Create();
   void Copy(const S21Matrix &o);
   void Clean(S21Matrix &o) noexcept;
   void Rebuild(int counter, const int type);
+  bool CountRowsAndCols(const S21Matrix &o) const;
+  bool CheckRowsAndCols();
 
  public:
   /* Constructors */
-  S21Matrix() noexcept;  // noexcept ? mistakes possible
+  S21Matrix() noexcept;
   S21Matrix(int rows, int cols);
   S21Matrix(const S21Matrix &other);
-  S21Matrix(S21Matrix &&other);  //
+  S21Matrix(S21Matrix &&other);
   ~S21Matrix();
-  //explicit - ?
+
   /* Methods */
   void SumMatrix(const S21Matrix &other);
   bool EqMatrix(const S21Matrix &other) const;
@@ -33,8 +34,8 @@ class S21Matrix {
   void MulNumber(const double num);
   void MulMatrix(const S21Matrix &other);
 
-  S21Matrix InverseMatrix();
-  S21Matrix Transpose();
+  S21Matrix InverseMatrix() const;
+  S21Matrix Transpose() const;
   S21Matrix CalcComplements() const;
   double Determinant() const;
   S21Matrix Minor(int r, int c) const;
@@ -49,23 +50,21 @@ class S21Matrix {
   S21Matrix &operator*=(const S21Matrix &x);
   S21Matrix &operator*=(double x);
   S21Matrix operator*(double x);
-  double &operator()(const int i, const int j);  // if change by index //
+  double &operator()(const int i, const int j);
   const double &operator()(const int i,
-                           const int j) const;  // if const, readable only
+                           const int j) const;
   S21Matrix &operator=(S21Matrix &&x);
+  S21Matrix &operator=(S21Matrix &x);
 
   /* get-set - mutator and assessor */
-  int getRows() noexcept;
-  int getCols() noexcept;
-  void setRows(int rows_count);
-  void setCols(int cols_count);
+  int GetRows() const noexcept;
+  int GetCols() const noexcept;
+  void SetRows(int rows_count);
+  void SetCols(int cols_count);
 
-  /* mine */
-  int countRowsAndCols(const S21Matrix &o) const;
-  bool checkRowsAndCols();
-  void printer() const;  //
+  void Printer() const;
 };
 
 #endif
 
-// https://ionian-haddock-769.notion.site/C-b1fd479eae9a4a638088d089f7d1bff9
+// добавить перегрузку умножения числа на матрицу

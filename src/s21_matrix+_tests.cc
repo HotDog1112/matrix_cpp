@@ -8,8 +8,8 @@
 
 TEST(test_function, eq_Matrix_1_false) {
   S21Matrix a(3, 3), b(3, 3);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       a(i, j) = 5;
       b(i, j) = 5;
     }
@@ -20,8 +20,8 @@ TEST(test_function, eq_Matrix_1_false) {
 
 TEST(test_function, eq_Matrix_2_true) {
   S21Matrix a(3, 3), b(3, 3);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       a(i, j) = 5;
       b(i, j) = 5;
     }
@@ -31,13 +31,13 @@ TEST(test_function, eq_Matrix_2_true) {
 
 TEST(test_function, eq_Matrix_3_throw) {
   S21Matrix a(3, 2), b(3, 3);
-  EXPECT_THROW(b.EqMatrix(a), std::logic_error);
+  EXPECT_FALSE(b.EqMatrix(a));
 }
 
 TEST(test_function, mul_Number_1_true) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 12.500000;
       a(i, j) = 5;
     }
@@ -48,8 +48,8 @@ TEST(test_function, mul_Number_1_true) {
 
 TEST(test_function, mul_Number_2_true) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 0;
       a(i, j) = 2.12;
     }
@@ -60,8 +60,8 @@ TEST(test_function, mul_Number_2_true) {
 
 TEST(test_function, mul_Number_3_true) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 2.12;
       a(i, j) = -2.12;
     }
@@ -72,8 +72,8 @@ TEST(test_function, mul_Number_3_true) {
 
 TEST(test_function, sum_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 0;
       a(i, j) = 1.23;
       b(i, j) = -1.23;
@@ -83,10 +83,19 @@ TEST(test_function, sum_Matrix_1_true) {
   EXPECT_TRUE(res.EqMatrix(a));
 }
 
+TEST(test, TEST_SEGA) {
+    S21Matrix matrix_check;
+  EXPECT_EQ(matrix_check.GetRows(), 0);
+  EXPECT_EQ(matrix_check.GetCols(), 0);
+
+  S21Matrix matrix_test{matrix_check};
+
+}
+
 TEST(test_function, sum_Matrix_2_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 23.46;
       a(i, j) = 12.03;
       b(i, j) = 11.43;
@@ -103,8 +112,8 @@ TEST(test_function, sum_Matrix_3_throw) {
 
 TEST(test_function, sub_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 2.46;
       a(i, j) = 1.23;
       b(i, j) = -1.23;
@@ -116,8 +125,8 @@ TEST(test_function, sub_Matrix_1_true) {
 
 TEST(test_function, sub_Matrix_2_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = -16;
       a(i, j) = -17.23;
       b(i, j) = -1.23;
@@ -134,8 +143,8 @@ TEST(test_function, sub_Matrix_3_throw) {
 
 TEST(test_function, mul_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 4;
       a(i, j) = 1;
       b(i, j) = 2;
@@ -152,8 +161,8 @@ TEST(test_function, mul_Matrix_2_throw) {
 
 TEST(test_function, transpose_1) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(j, i) = j;
       a(i, j) = j;
     }
@@ -164,8 +173,8 @@ TEST(test_function, transpose_1) {
 
 TEST(test_function, transpose_2) {
   S21Matrix a(2, 3), b(2, 3), res(3, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(j, i) = j;
       a(i, j) = j;
     }
@@ -333,8 +342,8 @@ TEST(test_function, inverse_3) {
 
 TEST(test_op, op_sum_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 0;
       a(i, j) = 1.23;
       b(i, j) = -1.23;
@@ -346,8 +355,8 @@ TEST(test_op, op_sum_Matrix_1_true) {
 
 TEST(test_op, op_sum_Matrix_2_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 1.87;
       a(i, j) = 0.87;
       b(i, j) = 1;
@@ -364,8 +373,8 @@ TEST(test_op, op_sum_Matrix_3_throw) {
 
 TEST(test_op, op_sub_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 2.46;
       a(i, j) = 1.23;
       b(i, j) = -1.23;
@@ -377,8 +386,8 @@ TEST(test_op, op_sub_Matrix_1_true) {
 
 TEST(test_op, op_sub_Matrix_2_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 1.87;
       a(i, j) = 0.87;
       b(i, j) = -1;
@@ -418,8 +427,8 @@ TEST(test_op, op_brackets_Matrix_3_throw) {
 
 TEST(test_op, op_mul_Number_1_true) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 12.500000;
       a(i, j) = 5;
     }
@@ -430,8 +439,8 @@ TEST(test_op, op_mul_Number_1_true) {
 
 TEST(test_op, op_mul_Number_2_true) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 0;
       a(i, j) = 2.12;
     }
@@ -442,8 +451,8 @@ TEST(test_op, op_mul_Number_2_true) {
 
 TEST(test_op, op_mul_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 4;
       a(i, j) = 1;
       b(i, j) = 2;
@@ -460,8 +469,8 @@ TEST(test_op, op_mul_Matrix_2_throw) {
 
 TEST(test_op, op_mul_eq_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 4;
       a(i, j) = 1;
       b(i, j) = 2;
@@ -478,8 +487,8 @@ TEST(test_op, op_mul_eq_Matrix_2_throw) {
 
 TEST(test_op, op_eq_Matrix_1) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 1;
       a(i, j) = 1;
     }
@@ -489,8 +498,8 @@ TEST(test_op, op_eq_Matrix_1) {
 
 TEST(test_op, op_eq_Matrix_2) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 2;
       a(i, j) = 1;
     }
@@ -500,13 +509,13 @@ TEST(test_op, op_eq_Matrix_2) {
 
 TEST(test_op, op_eq_Matrix_3_throw) {
   S21Matrix a(2, 3), res(3, 2);
-  EXPECT_THROW(a == res, std::logic_error);
+  EXPECT_FALSE(a == res);
 }
 
 TEST(test_op, op_eqAndMul_Number_1) {
   S21Matrix a(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 12.500000;
       a(i, j) = 5;
     }
@@ -517,8 +526,8 @@ TEST(test_op, op_eqAndMul_Number_1) {
 
 TEST(test_op, op_eqAndSum_Matrix_1) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 1.87;
       a(i, j) = 0.87;
       b(i, j) = 1;
@@ -530,8 +539,8 @@ TEST(test_op, op_eqAndSum_Matrix_1) {
 
 TEST(test_op, op_eqAndSum_Matrix_2) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 0;
       a(i, j) = 1.23;
       b(i, j) = -1.23;
@@ -543,8 +552,8 @@ TEST(test_op, op_eqAndSum_Matrix_2) {
 
 TEST(test_op, op_eqAndSub_Matrix_1_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 2.46;
       a(i, j) = 1.23;
       b(i, j) = -1.23;
@@ -556,8 +565,8 @@ TEST(test_op, op_eqAndSub_Matrix_1_true) {
 
 TEST(test_op, op_eqAndSub_Matrix_2_true) {
   S21Matrix a(2, 2), b(2, 2), res(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       res(i, j) = 1.87;
       a(i, j) = 0.87;
       b(i, j) = -1;
@@ -572,82 +581,82 @@ TEST(test_op, op_eqAndSub_Matrix_3_throw) {
   EXPECT_THROW(a -= b, std::logic_error);
 }
 
-/*=========== GET-SET TESTS ===========*/
+/*=========== Get-Set TESTS ===========*/
 
-TEST(test_getset, get_1) {
+TEST(test_GetSet, Get_1) {
   S21Matrix a(3, 2);
-  int res_1 = a.getCols();
+  int res_1 = a.GetCols();
   ASSERT_EQ(2, res_1);
 }
 
-TEST(test_getset, get_2) {
+TEST(test_GetSet, Get_2) {
   S21Matrix a(3, 2);
-  int res_1 = a.getRows();
+  int res_1 = a.GetRows();
   ASSERT_EQ(3, res_1);
 }
 
-TEST(test_getset, set_1_rows) {
+TEST(test_GetSet, Set_1_rows) {
   S21Matrix a(3, 2);
-  a.setRows(4);
-  int res_1 = a.getRows();
+  a.SetRows(4);
+  int res_1 = a.GetRows();
   ASSERT_EQ(4, res_1);
 }
 
-TEST(test_getset, set_2_rows) {
+TEST(test_GetSet, Set_2_rows) {
   S21Matrix a(3, 2);
-  a.setRows(3);
-  int res_1 = a.getRows();
+  a.SetRows(3);
+  int res_1 = a.GetRows();
   ASSERT_EQ(3, res_1);
 }
 
-TEST(test_getset, set_3_rows) {
+TEST(test_GetSet, Set_3_rows) {
   S21Matrix a(3, 2);
-  EXPECT_THROW(a.setRows(-1), std::logic_error);
+  EXPECT_THROW(a.SetRows(-1), std::logic_error);
 }
 
-TEST(test_getset, set_1_cols) {
+TEST(test_GetSet, Set_1_cols) {
   S21Matrix a(3, 2);
-  a.setCols(2);
-  int res_1 = a.getCols();
+  a.SetCols(2);
+  int res_1 = a.GetCols();
   ASSERT_EQ(2, res_1);
 }
 
-TEST(test_getset, set_2_cols) {
+TEST(test_GetSet, Set_2_cols) {
   S21Matrix a(3, 2);
-  a.setCols(5);
-  int res_1 = a.getCols();
+  a.SetCols(5);
+  int res_1 = a.GetCols();
   ASSERT_EQ(5, res_1);
 }
 
-TEST(test_getset, set_3_cols) {
+TEST(test_GetSet, Set_3_cols) {
   S21Matrix a(3, 3);
-  EXPECT_THROW(a.setCols(-1), std::logic_error);
+  EXPECT_THROW(a.SetCols(-1), std::logic_error);
 }
 
 TEST(test, constructor) {
   S21Matrix a;
-  EXPECT_EQ(a.getCols(), 0);
-  EXPECT_EQ(a.getRows(), 0);
-  a.setCols(2);
-  a.setCols(2);
+  EXPECT_EQ(a.GetCols(), 0);
+  EXPECT_EQ(a.GetRows(), 0);
+  a.SetCols(2);
+  a.SetCols(2);
   S21Matrix b(3, 3), c(b);
-  EXPECT_EQ(c.getRows(), 3);
+  EXPECT_EQ(c.GetRows(), 3);
   S21Matrix d(std::move(b));
-  EXPECT_EQ(b.getCols(), 0);
-  EXPECT_EQ(b.getRows(), 0);
-  EXPECT_EQ(d.getRows(), 3);
-  EXPECT_EQ(d.getCols(), 3);
+  EXPECT_EQ(b.GetCols(), 0);
+  EXPECT_EQ(b.GetRows(), 0);
+  EXPECT_EQ(d.GetRows(), 3);
+  EXPECT_EQ(d.GetCols(), 3);
   EXPECT_THROW(S21Matrix g(3, -2), std::logic_error);
 }
 
-TEST(test, printer) {
+TEST(test, Printer) {
   S21Matrix a(2, 2);
-  for (int i = 0; i < a.getRows(); i++) {
-    for (int j = 0; j < a.getCols(); j++) {
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
       a(i, j) = 0.87;
     }
   }
-  a.printer();
+  a.Printer();
   ASSERT_EQ(a(1, 1), 0.87);
 }
 
