@@ -31,11 +31,9 @@ S21Matrix::~S21Matrix() { Clean(); }
 
 void S21Matrix::Create() {
   matrix_ = new double *[rows_];
-  // printf("(%p)\n", matrix_);
   for (int i(0); i < rows_; i++) {
     try {
       matrix_[i] = new double[cols_];
-    // printf("%p\n", matrix_[i]);
     } catch (...) {
       int j(0);
       while (j < i) {
@@ -124,13 +122,11 @@ void S21Matrix::MulMatrix(const S21Matrix &other) {
 bool S21Matrix::EqMatrix(const S21Matrix &other) const {
   bool res = true;
   if (CountRowsAndCols(other) == false) {
-    printf("!!!!!");
     return false;
   } else {
     for (int i(0); i < rows_; i++) {
       for (int j(0); j < cols_; j++) {
         if (fabs(matrix_[i][j] - other.matrix_[i][j]) >= EDGE) {
-          printf("matrix_[i][j] - %lf --- other.matrix_[i][j] - %lf\n",matrix_[i][j], other.matrix_[i][j] );
           res = false;
           break;
         }
@@ -394,32 +390,3 @@ void S21Matrix::Printer() const {
     printf("\n");
   }
 }
-
-// int main() {
-//     S21Matrix a(4, 3), b(3, 3), res(4,3);
-//   for (int i = 0; i < a.GetRows(); i++) {
-//     for (int j = 0; j < a.GetCols(); j++) {
-//       a(i, j) = 12;
-//     }
-//   }
-//   for (int i = 0; i < b.GetRows(); i++) {
-//     for (int j = 0; j < b.GetCols(); j++) {
-//       b(i, j) = 3;
-//     }
-//   }
-//   a.Printer();
-
-//   a.SetCols(5);
-//   a.Printer();
-//   a.SetCols(2);
-//   a.Printer();
-//   a.SetRows(10);
-//   a.Printer();
-//   a.SetCols(5);
-//   a.Printer();
-
-//   // b.Printer();
-//   printf("%d %d", a.GetCols(), a.GetRows());
-  
-//   return 0;
-// }
