@@ -11,6 +11,8 @@
 
 Operator overloading: `+`, `-`, `=`, `+=`, `-=`, `*`, `*=`, `()`
 
+Setters, getters done
+
 Makefile targets:
 - `make all`: includes build, tests and generating a coverage report in html format
 - `make test`: testing with the <gtest> library
