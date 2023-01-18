@@ -1,9 +1,9 @@
 #ifndef SRC_S21_MATRIX_OOP_H_
 #define SRC_S21_MATRIX_OOP_H_
 
-#include <iostream>
-#include <cstring>
 #include <cmath>
+#include <cstring>
+#include <iostream>
 
 #define EDGE 0.0000001
 
@@ -14,7 +14,7 @@ class S21Matrix {
 
   void Create();
   void Copy(const S21Matrix &o);
-  S21Matrix& Clean() noexcept;
+  void Clean() noexcept;
   void Rebuild(int counter, const int type);
   bool CountRowsAndCols(const S21Matrix &o) const;
   bool CheckRowsAndCols();
@@ -41,20 +41,19 @@ class S21Matrix {
   S21Matrix Minor(int r, int c) const;
 
   /* operators */
-  S21Matrix operator+(const S21Matrix &x) const;
-  S21Matrix operator-(const S21Matrix &x) const;
-  S21Matrix operator*(const S21Matrix &x) const;
-  bool operator==(const S21Matrix &x) const;
-  S21Matrix &operator+=(const S21Matrix &x);
-  S21Matrix &operator-=(const S21Matrix &x);
-  S21Matrix &operator*=(const S21Matrix &x);
+  S21Matrix operator+(const S21Matrix &other) const;
+  S21Matrix operator-(const S21Matrix &other) const;
+  S21Matrix operator*(const S21Matrix &other) const;
+  bool operator==(const S21Matrix &other) const;
+  S21Matrix &operator+=(const S21Matrix &other);
+  S21Matrix &operator-=(const S21Matrix &other);
+  S21Matrix &operator*=(const S21Matrix &other);
   S21Matrix &operator*=(double x);
-  S21Matrix operator*(double x);
-  double &operator()(const int i, const int j);
-  const double &operator()(const int i,
-                           const int j) const;
-  S21Matrix &operator=(S21Matrix &&x);
-  S21Matrix &operator=(S21Matrix &x);
+  S21Matrix operator*(double x) const;
+  double &operator()(const int rows, const int cols);
+  const double &operator()(const int rows, const int cols) const;
+  S21Matrix &operator=(S21Matrix &&other);
+  S21Matrix &operator=(S21Matrix &other);
 
   /* get-set - mutator and assessor */
   int GetRows() const noexcept;

@@ -1,5 +1,5 @@
-CC=g++ -lstdc++
-FLAGS=-Wall -Werror -Wextra -std=c++17 -pedantic
+CC=g++
+FLAGS=-Wall -Werror -Wextra -std=c++17 -pedantic -pthread 
 SOURCES=s21_matrix_oop.cc
 OBJECTS=*.o
 TESTFLAGS=-lgtest
@@ -25,16 +25,16 @@ gcov_report: clean
 	lcov -t "s21_m_oop" -o report.info -c -d .
 	genhtml -o report.html report.info
 	rm *.gcda *.gcno
-	open report.html/index.html 2>/dev/null
+	# open report.html/index.html 2>/dev/null
 
 clean:
 	$(DELETE) *.a *.o s21_matrix_oop.a *.gcno *.gcda *.info s21_m_oop *.css *.html report
 	
 leaks:
-	leaks --atExit -- ./s21_m_oop
+	leaks  -fullContent  --atExit -- ./s21_m_oop
 
 linter:
 	clang-format -i *.cc *.h
-	clang-format -n *.cc *.h
+	# clang-format -n *.cc *.h
 
 .PHONY: leaks linter clean all
