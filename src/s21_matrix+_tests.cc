@@ -94,11 +94,16 @@ TEST(test, TEST_SEGA) {
 
   S21Matrix matrix_check1;
   S21Matrix matrix_check2;
+  S21Matrix matrix_check3(4, 4);
 
   matrix_check1* matrix_check2;
   matrix_check1 + matrix_check2;
   matrix_check1 += matrix_check2;
   matrix_check1 = matrix_check2;
+  S21Matrix new_m;
+  new_m = matrix_check1;
+  S21Matrix new_m_1(10, 10);
+  new_m_1 = matrix_check3;
   S21Matrix a(3, 3);
   S21Matrix c = a;
 }
@@ -153,7 +158,7 @@ TEST(test_function, sub_Matrix_3_throw) {
 }
 
 TEST(test_function, mul_Matrix_1_true) {
-    S21Matrix a(4, 3), b(3, 3), res(4,3);
+  S21Matrix a(4, 3), b(3, 3), res(4, 3);
   for (int i = 0; i < a.GetRows(); i++) {
     for (int j = 0; j < a.GetCols(); j++) {
       a(i, j) = 12;
@@ -164,7 +169,7 @@ TEST(test_function, mul_Matrix_1_true) {
       b(i, j) = 3;
     }
   }
-    for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 3; j++) {
       res(i, j) = 108;
     }
@@ -457,6 +462,11 @@ TEST(test_op, op_brackets_Matrix_1_true) {
   S21Matrix a(3, 3);
   a(1, 2) = 3.3;
   ASSERT_EQ(3.3, a(1, 2));
+  S21Matrix b(2, 2), c(2, 2);
+  b = c;
+  // S21Matrix a(3, 3);
+  // S21Matrix c = a;
+  // ASSERT_EQ(b,c);
 }
 
 TEST(test_op, op_brackets_Matrix_2_throw) {
@@ -624,13 +634,6 @@ TEST(test_op, op_eqAndSub_Matrix_3_throw) {
   S21Matrix a(3, 1), b(2, 3);
   EXPECT_THROW(a -= b, std::logic_error);
 }
-
-// TEST(test_op, test_op_brackets_const) {
-//   const int r = 4, c = 4;
-//   const S21Matrix a(r, c);
-//   const double res = a(2, 2);
-//   EXPECT_EQ(res, 0);
-// }
 
 TEST(test_op, test_op_brackets_min) {
   S21Matrix a(3, 3);

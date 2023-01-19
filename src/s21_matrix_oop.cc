@@ -46,13 +46,13 @@ void S21Matrix::Create() {
   }
 }
 
-void S21Matrix::Copy(const S21Matrix &o) {
-  cols_ = o.cols_;
-  rows_ = o.rows_;
+void S21Matrix::Copy(const S21Matrix &other) {
+  cols_ = other.cols_;
+  rows_ = other.rows_;
   Create();
   for (int i(0); i < rows_; i++) {
     for (int j(0); j < cols_; j++) {
-      matrix_[i][j] = o.matrix_[i][j];
+      matrix_[i][j] = other.matrix_[i][j];
     }
   }
 }
@@ -63,7 +63,6 @@ void S21Matrix::Clean() noexcept {
       delete[] matrix_[i];
     }
     delete[] matrix_;
-    matrix_ = nullptr;
   }
 }
 
@@ -126,9 +125,9 @@ bool S21Matrix::EqMatrix(const S21Matrix &other) const {
   } else {
     for (int i(0); i < rows_; i++) {
       for (int j(0); j < cols_; j++) {
-        if (fabs(matrix_[i][j] - other.matrix_[i][j]) >= EDGE) {
-          res = false;
-          break;
+        double res_num = matrix_[i][j] - other.matrix_[i][j];
+        if (std::abs(res_num) >= EDGE) {
+          return false;
         }
       }
     }
@@ -196,7 +195,7 @@ S21Matrix S21Matrix::CalcComplements() const {
     throw std::out_of_range("Size error. Rows and cols aren\'t equal");
   } else {
     if (rows_ == 1) {
-      res.matrix_[0][0] = matrix_[0][0];   // 1-1 = 0, нельзя создать
+      res.matrix_[0][0] = matrix_[0][0];  // 1-1 = 0, нельзя создать
     } else {
       for (int i(0); i < rows_; i++) {
         for (int j(0); j < cols_; j++) {
@@ -255,9 +254,9 @@ const double &S21Matrix::operator()(const int rows, const int cols) const {
   return matrix_[rows][cols];
 }
 
-S21Matrix S21Matrix::operator*(double x) const {
+S21Matrix S21Matrix::operator*(double num) const {
   S21Matrix res(*this);
-  res.MulNumber(x);
+  res.MulNumber(num);
   return res;
 }
 
@@ -282,9 +281,8 @@ S21Matrix &S21Matrix::operator=(S21Matrix &&other) {
 
 S21Matrix &S21Matrix::operator=(S21Matrix &other) {
   if (this != &other) {
-    rows_ = other.rows_;
-    cols_ = other.cols_;
-    matrix_ = other.matrix_;
+    Clean();
+    Copy(other);
   }
   return *this;
 }
@@ -374,8 +372,8 @@ void S21Matrix::Rebuild(int counter, const int type) {
 
 /*=========== for me ===========*/
 
-bool S21Matrix::CountRowsAndCols(const S21Matrix &o) const {
-  return (o.rows_ == rows_ && o.cols_ == cols_) ? true : false;
+bool S21Matrix::CountRowsAndCols(const S21Matrix &other) const {
+  return (other.rows_ == rows_ && other.cols_ == cols_) ? true : false;
 }
 
 bool S21Matrix::CheckRowsAndCols() {
@@ -389,4 +387,5 @@ void S21Matrix::Printer() const {
     }
     printf("\n");
   }
+  printf("%d %d\n", rows_, cols_);
 }

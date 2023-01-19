@@ -13,10 +13,10 @@ class S21Matrix {
   double **matrix_;
 
   void Create();
-  void Copy(const S21Matrix &o);
+  void Copy(const S21Matrix &other);
   void Clean() noexcept;
   void Rebuild(int counter, const int type);
-  bool CountRowsAndCols(const S21Matrix &o) const;
+  bool CountRowsAndCols(const S21Matrix &other) const;
   bool CheckRowsAndCols();
 
  public:
@@ -38,7 +38,7 @@ class S21Matrix {
   S21Matrix Transpose() const;
   S21Matrix CalcComplements() const;
   double Determinant() const;
-  S21Matrix Minor(int r, int c) const;
+  S21Matrix Minor(int rows, int cols) const;
 
   /* operators */
   S21Matrix operator+(const S21Matrix &other) const;
@@ -48,8 +48,8 @@ class S21Matrix {
   S21Matrix &operator+=(const S21Matrix &other);
   S21Matrix &operator-=(const S21Matrix &other);
   S21Matrix &operator*=(const S21Matrix &other);
-  S21Matrix &operator*=(double x);
-  S21Matrix operator*(double x) const;
+  S21Matrix &operator*=(double num);
+  S21Matrix operator*(double num) const;
   double &operator()(const int rows, const int cols);
   const double &operator()(const int rows, const int cols) const;
   S21Matrix &operator=(S21Matrix &&other);
