@@ -1,11 +1,7 @@
-#ifndef SRC_S21_MATRIX_OOP_H_
-#define SRC_S21_MATRIX_OOP_H_
+#ifndef S21_MATRIX_OOP_SRC_S21_MATRIX_OOP_H_
+#define S21_MATRIX_OOP_SRC_S21_MATRIX_OOP_H_
 
-#include <cmath>
-#include <cstring>
-#include <iostream>
-
-#define EDGE 0.0000001
+static const double EDGE = 0.0000001;
 
 class S21Matrix {
  private:
@@ -24,7 +20,7 @@ class S21Matrix {
   S21Matrix() noexcept;
   S21Matrix(int rows, int cols);
   S21Matrix(const S21Matrix &other);
-  S21Matrix(S21Matrix &&other);
+  S21Matrix(S21Matrix &&other) noexcept;
   ~S21Matrix();
 
   /* Methods */
@@ -52,8 +48,10 @@ class S21Matrix {
   S21Matrix operator*(double num) const;
   double &operator()(const int rows, const int cols);
   const double &operator()(const int rows, const int cols) const;
-  S21Matrix &operator=(S21Matrix &&other);
+  S21Matrix &operator=(S21Matrix &&other) noexcept;
   S21Matrix &operator=(S21Matrix &other);
+
+  friend S21Matrix operator*(const double num, const S21Matrix &other);
 
   /* get-set - mutator and assessor */
   int GetRows() const noexcept;
@@ -65,5 +63,3 @@ class S21Matrix {
 };
 
 #endif
-
-// добавить перегрузку умножения числа на матрицу

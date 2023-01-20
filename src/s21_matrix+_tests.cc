@@ -350,7 +350,7 @@ TEST(test_function, calc_comp_5) {
   S21Matrix a(1, 1);
   S21Matrix b(1, 1), res(1, 1);
   a(0, 0) = 543.3231;
-  res(0, 0) = 543.3231;
+  res(0, 0) = 1;
   b = a.CalcComplements();
   ASSERT_EQ(res, b);
 }
@@ -387,11 +387,9 @@ TEST(test_function, inverse_2) {
 }
 
 TEST(test_function, inverse_3) {
-  S21Matrix a(1, 1), res(1, 1), b(1, 1);
-  res(0, 0) = 0.5;
+  S21Matrix a(1, 1);
   a(0, 0) = 2;
-  b = a.InverseMatrix();
-  ASSERT_EQ(res, b);
+  EXPECT_THROW(a.InverseMatrix(), std::logic_error);
 }
 
 /*=========== OPERATOR TESTS ===========*/
@@ -464,9 +462,7 @@ TEST(test_op, op_brackets_Matrix_1_true) {
   ASSERT_EQ(3.3, a(1, 2));
   S21Matrix b(2, 2), c(2, 2);
   b = c;
-  // S21Matrix a(3, 3);
-  // S21Matrix c = a;
-  // ASSERT_EQ(b,c);
+  ASSERT_EQ(b, c);
 }
 
 TEST(test_op, op_brackets_Matrix_2_throw) {
@@ -479,6 +475,13 @@ TEST(test_op, op_brackets_Matrix_3_throw) {
   EXPECT_THROW(a(1, -1), std::logic_error);
 }
 
+TEST(test_op, test_op_brackets_const) {
+  const int r = 5, c = 5;
+  const S21Matrix h(r, c);
+  double res = h(1, 1);
+  ASSERT_EQ(res, 0);
+}
+
 TEST(test_op, op_mul_Number_1_true) {
   S21Matrix a(2, 2), res(2, 2);
   for (int i = 0; i < a.GetRows(); i++) {
@@ -488,6 +491,18 @@ TEST(test_op, op_mul_Number_1_true) {
     }
   }
   a = a * 2.5;
+  EXPECT_TRUE(res.EqMatrix(a));
+}
+
+TEST(test_op, op_mul_Number_first_1_true) {
+  S21Matrix a(2, 2), res(2, 2);
+  for (int i = 0; i < a.GetRows(); i++) {
+    for (int j = 0; j < a.GetCols(); j++) {
+      res(i, j) = 12.500000;
+      a(i, j) = 5;
+    }
+  }
+  a = 2.5 * a;
   EXPECT_TRUE(res.EqMatrix(a));
 }
 
@@ -659,6 +674,11 @@ TEST(test_GetSet, Set_1_rows) {
   a.SetRows(4);
   int res_1 = a.GetRows();
   ASSERT_EQ(4, res_1);
+
+  S21Matrix b(6, 6);
+  b.SetRows(4);
+  int res_2 = b.GetRows();
+  ASSERT_EQ(4, res_2);
 }
 
 TEST(test_GetSet, Set_2_rows) {

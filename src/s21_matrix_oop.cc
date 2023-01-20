@@ -1,5 +1,9 @@
 #include "s21_matrix_oop.h"
 
+#include <cmath>
+#include <cstring>
+#include <iostream>
+
 /*============ сonstructors ===========*/
 
 S21Matrix::S21Matrix() noexcept : rows_(0), cols_(0), matrix_(nullptr) {}
@@ -11,29 +15,24 @@ S21Matrix::S21Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
   Create();
 }
 
-S21Matrix::S21Matrix(S21Matrix &&other) : rows_(0), cols_(0), matrix_(nullptr) {
-  rows_ = other.rows_;
-  cols_ = other.cols_;
-  matrix_ = other.matrix_;
+S21Matrix::S21Matrix(S21Matrix &&other) noexcept
+    : rows_(other.rows_), cols_(other.cols_), matrix_(other.matrix_) {
   other.matrix_ = nullptr;
   other.rows_ = 0;
   other.cols_ = 0;
 }
 
-S21Matrix::S21Matrix(const S21Matrix &other)
-    : rows_(other.rows_), cols_(other.cols_) {
-  Copy(other);
-}
+S21Matrix::S21Matrix(const S21Matrix &other) { Copy(other); }
 
 S21Matrix::~S21Matrix() { Clean(); }
 
 /*=========== private functions ===========*/
 
 void S21Matrix::Create() {
-  matrix_ = new double *[rows_];
+  matrix_ = new double *[rows_]();
   for (int i(0); i < rows_; i++) {
     try {
-      matrix_[i] = new double[cols_];
+      matrix_[i] = new double[cols_]();
     } catch (...) {
       int j(0);
       while (j < i) {
@@ -63,13 +62,14 @@ void S21Matrix::Clean() noexcept {
       delete[] matrix_[i];
     }
     delete[] matrix_;
+    matrix_ = nullptr;
   }
 }
 
 /*=========== public functions ===========*/
 
 void S21Matrix::SumMatrix(const S21Matrix &other) {
-  if (CountRowsAndCols(other) == false || !CheckRowsAndCols()) {
+  if (CountRowsAndCols(other) == false) {
     throw std::out_of_range("Size error: sizes are not equal.");
   } else {
     for (int i(0); i < rows_; i++) {
@@ -81,7 +81,7 @@ void S21Matrix::SumMatrix(const S21Matrix &other) {
 }
 
 void S21Matrix::SubMatrix(const S21Matrix &other) {
-  if (CountRowsAndCols(other) == false || !CheckRowsAndCols()) {
+  if (CountRowsAndCols(other) == false) {
     throw std::out_of_range("Size error: sizes are not equal.");
   } else {
     for (int i(0); i < rows_; i++) {
@@ -120,7 +120,8 @@ void S21Matrix::MulMatrix(const S21Matrix &other) {
 
 bool S21Matrix::EqMatrix(const S21Matrix &other) const {
   bool res = true;
-  if (CountRowsAndCols(other) == false) {
+  if (CountRowsAndCols(other) == false || matrix_ == nullptr ||
+      other.matrix_ == nullptr) {
     return false;
   } else {
     for (int i(0); i < rows_; i++) {
@@ -150,7 +151,9 @@ double S21Matrix::Determinant() const {
   if (cols_ != rows_) {
     throw std::out_of_range("Size error. Rows and cols aren\'t equal");
   } else {
-    if (rows_ == 1) {
+    if (rows_ == 0) {
+      res = 1;
+    } else if (rows_ == 1) {
       res = matrix_[0][0];
     } else if (rows_ == 2) {
       res = matrix_[0][0] * matrix_[1][1] - matrix_[1][0] * matrix_[0][1];
@@ -194,8 +197,10 @@ S21Matrix S21Matrix::CalcComplements() const {
   if (cols_ != rows_) {
     throw std::out_of_range("Size error. Rows and cols aren\'t equal");
   } else {
-    if (rows_ == 1) {
-      res.matrix_[0][0] = matrix_[0][0];  // 1-1 = 0, нельзя создать
+    if (rows_ == 0) {
+      throw std::out_of_range("Size error.");
+    } else if (rows_ == 1) {
+      res.matrix_[0][0] = 1;
     } else {
       for (int i(0); i < rows_; i++) {
         for (int j(0); j < cols_; j++) {
@@ -212,16 +217,16 @@ S21Matrix S21Matrix::CalcComplements() const {
 
 S21Matrix S21Matrix::InverseMatrix() const {
   S21Matrix res(rows_, cols_);
-  double d = Determinant();
-  if (std::fabs(d) < EDGE) {
+  double det = Determinant();
+  if (std::fabs(det) < EDGE) {
     throw std::out_of_range("Error. Determinant is 0.");
   }
-  if (cols_ == 1 && rows_ == 1) {
-    res.matrix_[0][0] = 1 / matrix_[0][0];
+  if (rows_ < 2) {
+    throw std::out_of_range("Size error.");
   } else {
     res = Transpose();
     res = res.CalcComplements();
-    res.MulNumber(1.0 / d);
+    res.MulNumber(1.0 / det);
   }
   return res;
 }
@@ -266,7 +271,13 @@ S21Matrix S21Matrix::operator*(const S21Matrix &other) const {
   return res;
 }
 
-S21Matrix &S21Matrix::operator=(S21Matrix &&other) {
+S21Matrix operator*(const double num, const S21Matrix &other) {
+  S21Matrix res(other);
+  res.MulNumber(num);
+  return res;
+}
+
+S21Matrix &S21Matrix::operator=(S21Matrix &&other) noexcept {
   if (this != &other) {
     Clean();
     rows_ = other.rows_;
@@ -288,7 +299,8 @@ S21Matrix &S21Matrix::operator=(S21Matrix &other) {
 }
 
 bool S21Matrix::operator==(const S21Matrix &other) const {
-  return EqMatrix(other);
+  bool res = EqMatrix(other);
+  return res;
 }
 
 S21Matrix &S21Matrix::operator*=(double other) {
